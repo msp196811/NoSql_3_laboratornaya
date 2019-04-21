@@ -1,0 +1,45 @@
+1)
+db.films.aggregate([
+    {
+        $group: { 
+            _id:{Category: "$Category"},
+            "Count": {$sum: 1}
+            
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            Category: "$_id.Category", 
+            "Count": "$Count"
+        }
+    }
+    ])
+    
+  2)
+  db.films.aggregate([
+       {$group: { _id: {"Category":"$Category",
+                        "Rating": "$Rating"
+                },
+                  count: {$sum: 1}
+       }}
+       ])
+       
+  3)
+  db.Customers.aggregate([
+    {$unwind: "$Rentals"},
+    {$unwind: "$Rentals.Payments"},
+     {$project: {
+        "First Name": "$First Name", 
+        "Last Name": "$Last Name", 
+        "Amount": "$Rentals.Payments.Amount"
+    }},
+    {$group: { _id: {
+                     "First Name": "$First Name",
+                     "Last Name": "$Last Name"
+                    },
+              total:{$sum:"$Amount"}
+              
+    }}
+    ])
+  
